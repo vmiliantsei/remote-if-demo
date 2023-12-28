@@ -82,8 +82,6 @@ let Dialog = null; /* imported API object (the file select/open layer) */
 let Blorb = null; /* imported API object (the resource layer) */
 
 /* Some handy constants */
-/* A non-breaking space character. */
-const NBSP = '\xa0';
 /* Size of the scrollbar, give or take some. */
 const approx_scroll_width = 20;
 /* Margin for how close you have to scroll to end-of-page to kill the
@@ -981,7 +979,6 @@ function accept_one_window(arg) {
             for (let ix=win.gridheight; ix<arg.gridheight; ix++) {
                 const el = $('<div>',
                              { id: dom_prefix+'win'+win.id+'_ln'+ix, 'class': 'GridLine' });
-                el.append(NBSP);
                 win.frameel.append(el);
             }
         }
@@ -1123,10 +1120,7 @@ function accept_one_content(arg) {
                 glkote_error('Got content for nonexistent line ' + linenum + ' of window ' + arg.id + '.');
                 continue;
             }
-            if (!content || !content.length) {
-                lineel.text(NBSP);
-            }
-            else {
+            if (content && content.length) {
                 lineel.empty();
                 for (let sx=0; sx<content.length; sx++) {
                     const rdesc = content[sx];
@@ -1195,11 +1189,7 @@ function accept_one_content(arg) {
 
            We have to keep track of a flag per paragraph div. The blankpara
            flag indicates whether this is a completely empty paragraph (a
-           blank line). We have to drop a NBSP into empty paragraphs --
-           otherwise they'd collapse -- and so this flag lets us distinguish
-           between an empty paragraph and one which truly contains a NBSP.
-           (The difference is, when you append data to a truly empty paragraph,
-           you have to delete the placeholder NBSP.)
+           blank line).
 
            We also give the paragraph div the BlankPara class, in case
            CSS cares.
@@ -1225,7 +1215,7 @@ function accept_one_content(arg) {
             }
             if (!content || !content.length) {
                 if (divel.data('blankpara'))
-                    divel.append($('<span>', { 'class':'BlankLineSpan' }).text(NBSP));
+                    divel.append($('<span>', { 'class':'BlankLineSpan' }));
                 continue;
             }
             if (divel.data('blankpara')) {
@@ -1347,7 +1337,7 @@ function accept_one_content(arg) {
 
             /* Make sure we have some space left for typing. */
             if (cursel.position().left / win.frameel.width() > 0.5) {
-                divel = $('<div>', { 'class': 'BufferLine BlankPara BlankLineSpan' }).text(NBSP);
+                divel = $('<div>', { 'class': 'BufferLine BlankPara BlankLineSpan' });
                 win.frameel.append(divel);
                 divel.append(cursel);
             }
