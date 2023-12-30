@@ -442,9 +442,10 @@ function measure_window() {
     gameport.append(layout_test_pane);
 
     function get_size(el) {
+        const rect = el.get(0).getBoundingClientRect();
         return {
-            width: el.outerWidth(),
-            height: el.outerHeight()
+            width: rect.width,
+            height: rect.height
         };
     }
 
@@ -455,7 +456,7 @@ function measure_window() {
     let line2size = get_size(gridline2);
 
     metrics.gridcharheight = Math.max(1, gridline2.position().top - gridline1.position().top);
-    metrics.gridcharwidth = Math.max(1, gridspan.width() / 8);
+    metrics.gridcharwidth = Math.max(1, spansize.width / 8);
     /* Yes, we can wind up with a non-integer charwidth value. But we force the value to be >= 1; zero can lead to annoying NaNs later on. */
 
     /* Find the total margin around the character grid (out to the window's
@@ -471,7 +472,7 @@ function measure_window() {
     line2size = get_size(bufline2);
 
     metrics.buffercharheight = Math.max(1, bufline2.position().top - bufline1.position().top);
-    metrics.buffercharwidth = Math.max(1, bufspan.width() / 8);
+    metrics.buffercharwidth = Math.max(1, spansize.width / 8);
     /* Again, at least 1, but not necessarily integer. */
 
     /* Again, these values include both sides (left+right, top+bottom).
